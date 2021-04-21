@@ -9,7 +9,8 @@ urlpatterns = [
     # re_path(r'^post/(?P<slug>[-\w]+)/$', PostDetailView.as_view(), name='post_detail'),
     path('archive/', PostArchiveView.as_view(), name='post_archive'),
     path('archive/<int:year>', PostYearArchiveView.as_view(), name='post_year_archive'),
-    path('archive/<int:year>/<str:month>', PostMonthArchiveView.as_view(), name='post_month_archive'),
+    # path('archive/<int:year>/<str:month>', PostMonthArchiveView.as_view(), name='post_month_archive'),
+    re_path(r'^archive/(?P<year>[-\w]+)/(?P<month>[-\w]+)/$', PostMonthArchiveView.as_view(), name='post_month_archive'),
     path('archive/<int:year>/<str:month>/<int:day>', PostDayArchiveView.as_view(), name='post_day_archive'),
     path('archive/tody', PostTodayArchiveView.as_view(), name='post_today_archive'),
 ]

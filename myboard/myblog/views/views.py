@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
@@ -37,16 +38,19 @@ class PostYearArchiveView(YearArchiveView):
 
 class PostMonthArchiveView(MonthArchiveView):
     model = Post
+    template_name = 'blog/post_archive_month.html'
     date_field = 'modify_dt'
 
 
 class PostDayArchiveView(DayArchiveView):
     model = Post
+    template_name = 'blog/post_archive_day.html'
     date_field = 'modify_dt'
 
 
 class PostTodayArchiveView(TodayArchiveView):
     model = Post
+    template_name = 'blog/post_archive_today.html'
     date_field = 'modify_dt'
 
 

@@ -20,10 +20,13 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from myboard.views import HomeView
 import os
 urlpatterns = [
 
-    path('', include('myblog.urls')),
+    path('', HomeView.as_view(), name='home'),
+    path('bookmark', include('bookmark.urls')),
+    path('blog', include('myblog.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 

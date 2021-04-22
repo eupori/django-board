@@ -27,7 +27,7 @@
             <li class="nav-item mx-1 btn btn-primary">
                 <a class="nav-link text-white" href="{% url 'bookmark:index' %}">Bookmark</a></li>
             <li class="nav-item mx-1 btn btn-primary">
-                <a class="nav-link text-white" href="{% url 'myblog:index' %}">Blog</a></li>
+                <a class="nav-link text-white" href="{% url 'blog:index' %}">Blog</a></li>
             <li class="nav-item mx-1 btn btn-primary">
                 <a class="nav-link text-white" href="">Photo</a></li>
 
@@ -36,8 +36,8 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'myblog:post_archive' %}">Archive</a>
-                    <a class="dropdown-item" href="">Search</a>
+                    <a class="dropdown-item" href="{% url 'blog:post_archive' %}">Archive</a>
+                    <a class="dropdown-item" href="{% url 'blog:search' %}">Search</a>
                 </div>
             </li>
         </ul>

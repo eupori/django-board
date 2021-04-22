@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -12,6 +13,7 @@ class Post(models.Model):
     modify_dt = models.DateTimeField('수정일', auto_now=True)
     is_active = models.BooleanField('활성화 여부', default=True)
     deleted_at = models.DateTimeField('삭제일', null=True, blank=True)
+    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = 'post'
@@ -23,7 +25,7 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('myblog:post_detail', args=(self.slug,))
+        return reverse('blog:post_detail', args=(self.slug,))
 
     def get_previous(self):
         return self.get_previous_by_modify_dt()

@@ -25,8 +25,8 @@ import os
 urlpatterns = [
 
     path('', HomeView.as_view(), name='home'),
-    path('bookmark', include('bookmark.urls')),
-    path('blog', include('myblog.urls')),
+    path('bookmark/', include('bookmark.urls')),
+    path('blog/', include('blog.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 

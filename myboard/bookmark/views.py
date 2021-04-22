@@ -23,9 +23,6 @@ class BookmarkLV(ListView):
                 })
         context = self.get_context_data()
 
-        print("aaaaa")
-        print(context)
-        print("aaaaa")
         return self.render_to_response(context)
 
 

@@ -39,7 +39,6 @@ class PostDetailView(DetailView):
 class PostArchiveView(ArchiveIndexView):
     model = Post
     template_name = 'blog/post_archive.html'
-    date_field = 'modify_dt'
 
 
 class PostYearArchiveView(YearArchiveView):
@@ -94,15 +93,9 @@ class SearchFormView(FormView):
             Q(description__icontains=search_word) | 
             Q(content__icontains=search_word)).distinct()
 
-        print("aaa")
-        print(post_list)
-        print("aaa")
         context = {}
         context['form'] = form
         context['search_term'] = search_word
         context['object_list'] = post_list
 
         return render(self.request, self.template_name, context)
-
-    def form_invalid(self, form):
-        print("bbbb")

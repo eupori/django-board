@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookmark',
     'blog',
+    'photo',
+    'water',
     'taggit.apps.TaggitAppConfig',
     'taggit_templatetags2',
 ]

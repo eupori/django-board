@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}post_all.html{% endblock %}
+{% block content %}
+{% csrf_token %}
+
+<style>
+[class*="col-sm"] {
+	padding: 8px;
+	border: 1px solid gray;
+	text-align: center;
+}
+</style>
+
+<h1>Water</h1>
+<br>
+
+<br>
+
+<div class="row">
+	<div class="col-mod-8 m-3 mr-5">
+		<div>
+			<h3>{{object.user.username}}님의 수분 섭취</h3>
+			
+			<h5 id="today"><span>{{today|date:"Y-m-d H:i"}} 기준 </span> <span id="today_amount">{{today_amount}} ml</span></h5>
+			<br><br>
+		</div>
+		<div>
+			<h3>추가하기</h3>
+			<br>
+			<input id="add_water_180" name="add_water" type="button" class="btn btn-outline-primary" onclick="asd(180);" value="180ml">
+			<input id="add_water_330" name="add_water" type="button" class="btn btn-outline-primary" onclick="asd(330);" value="330ml">
+			<input id="add_water_500" name="add_water" type="button" class="btn btn-outline-primary" onclick="asd(500);" value="500ml">
+			<input id="amount" name="amount" type="input" class="control mr-2 ml-5" value="">
+			<input id="btn_submit" name="btn_submit" type="button" class="btn btn-outline-secondary" onclick="add_water();" value="추가">
+		</div>
+	</div>	
+	<div id="history" class="col-mod-4 col-sm-4 m-3 ml-5" style="overflow:auto; width:500px; height:450px;">
+		{% include "history.html" %}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-mod-12">
+		<div id="chart_div">
+			{% include "today_chart.html" %}
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-mod-12">
+		<div id="chart_div_week">
+			{% include "week_chart.html" %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block extra-script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+		// using jQuery
+		function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+			var cookie = jQuery.trim(cookies[i]);
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) == (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+			}
+		}
+		return cookieValue;
+		}
+		function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$(document).ready(function() {
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+			}
+		});
+		});
+</script>
+
+<script>
+	var click_flag = false;
+
+	function target_remove(event){
+			user = {{object.user.id}}
+			id = event.target.id
+			$.ajax({
+				url:"{% url 'water:water_remove' %}",
+				type:'POST',
+				data:{"id":id},
+				dataType: "json",
+				success: function(response){
+					console.log(response)	
+					$("#today_amount").html( response.result.today_amount + "ml")
+					$("#amount").val("")
+					$("#chart_div").html(response.render_chart_today)
+					$(event.target).parent().remove()
+				}
+			})
+		}
+
+	$(function(){
+		$("input[name=btn_remove]").click(target_remove)
+	})
+
+	$(function(){
+		$("input[name=add_water]").dblclick(function(){
+			user = {{object.user.id}}
+			amount = $("#amount").val()
+			$.ajax({
+				url:"{% url 'water:water_append' %}",
+				type:'POST',
+				data:{"user":user, "amount":amount},
+				dataType: "json",
+				success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+					console.log(response)	
+					$("#today_amount").html( response.result.today_amount + "ml")
+					$("#amount").val("")
+					$("#history").html(response.render_history)
+					$("#chart_div").html(response.render_chart_today)
+					
+					$("input[name=btn_remove]").off("click");
+					$("input[name=btn_remove]").on("click", target_remove)
+				}
+			})
+		})
+	})
+	
+    function asd(amount){
+		$("#amount").val(amount)
+	}
+
+	function add_water(){
+
+		if($("#amount").val()==""){
+			alert("값을 넣어주세요.")
+		}
+		user = {{object.user.id}}
+		amount = $("#amount").val()
+		$.ajax({
+            url:"{% url 'water:water_append' %}",
+            type:'POST',
+            data:{"user":user, "amount":amount},
+			dataType: "json",
+			success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
+				console.log(response)	
+				$("#today_amount").html( response.result.today_amount + "ml")
+				$("#amount").val("")
+				$("#history").html(response.render)
+				$("#chart_div").html(response.render_chart_today)
+			}
+        })
+	}
+</script>
+
+{% endblock %}

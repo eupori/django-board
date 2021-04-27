@@ -1,0 +1,8 @@
+
+{% for each in water %}
+<p>
+<span>{{each.time|date:"Y-m-d H:i"}} - {{each.amount}} ml</span> <input id="{{each.id}}" name="btn_remove" type="button" value="x">
+</p>
+{% endfor %}
+
+

@@ -14,14 +14,13 @@
 <h1>Water</h1>
 <br>
 
-<br>
-
 <div class="row">
 	<div class="col-mod-8 m-3 mr-5">
 		<div>
 			<h3>{{object.user.username}}님의 수분 섭취</h3>
 			
-			<h5 id="today"><span>{{today|date:"Y-m-d H:i"}} 기준 </span> <span id="today_amount">{{today_amount}} ml</span></h5>
+			<h5 id="today"><span>{{today|date:"Y-m-d H:i"}} 기준 </span> <br>
+			<span id="today_amount">{{today_amount}} / {{object.goal}} (ml)</span></h5>
 			<br><br>
 		</div>
 		<div>
@@ -64,57 +63,57 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <script>
-		// using jQuery
-		function getCookie(name) {
-			var cookieValue = null;
-			if (document.cookie && document.cookie != '') {
-				var cookies = document.cookie.split(';');
-				for (var i = 0; i < cookies.length; i++) {
-					var cookie = jQuery.trim(cookies[i]);
-					// Does this cookie string begin with the name we want?
-					if (cookie.substring(0, name.length + 1) == (name + '=')) {
-						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						break;
-					}
+	// using jQuery
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) == (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
 				}
 			}
-			return cookieValue;
 		}
-		function csrfSafeMethod(method) {
-		// these HTTP methods do not require CSRF protection
-			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-		}
-		$(document).ready(function() {
-			var csrftoken = getCookie('csrftoken');
-			$.ajaxSetup({
-				beforeSend: function(xhr, settings) {
-					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-						xhr.setRequestHeader("X-CSRFToken", csrftoken);
-					}
+		return cookieValue;
+	}
+	function csrfSafeMethod(method) {
+	// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	$(document).ready(function() {
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
 				}
-			});
+			}
 		});
+	});
 </script>
 
 <script>
 	var click_flag = false;
 
 	function target_remove(event){
-			user = {{object.user.id}}
-			id = event.target.id
-			$.ajax({
-				url:"{% url 'water:water_remove' %}",
-				type:'POST',
-				data:{"id":id},
-				dataType: "json",
-				success: function(response){
-					$("#today_amount").html( response.result.today_amount + "ml")
-					$("#amount").val("")
-					$("#chart_div").html(response.render_chart_today)
-					$(event.target).parent().remove()
-				}
-			})
-		}
+		user = {{object.user.id}}
+		id = event.target.id
+		$.ajax({
+			url:"{% url 'water:water_remove' %}",
+			type:'POST',
+			data:{"id":id},
+			dataType: "json",
+			success: function(response){
+				$("#today_amount").html( response.result.today_amount + "ml")
+				$("#amount").val("")
+				$("#chart_div").html(response.render_chart_today)
+				$(event.target).parent().remove()
+			}
+		})
+	}
 
 	$(function(){
 		$("input[name=btn_remove]").click(target_remove)
@@ -161,9 +160,12 @@
 			success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
 				console.log(response)	
 				$("#today_amount").html( response.result.today_amount + "ml")
-				$("#amount").val("")
-				$("#history").html(response.render)
-				$("#chart_div").html(response.render_chart_today)
+					$("#amount").val("")
+					$("#history").html(response.render_history)
+					$("#chart_div").html(response.render_chart_today)
+					
+					$("input[name=btn_remove]").off("click");
+					$("input[name=btn_remove]").on("click", target_remove)
 			}
         })
 	}

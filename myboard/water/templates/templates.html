@@ -20,7 +20,7 @@
 			<h3>{{object.user.username}}님의 수분 섭취</h3>
 			
 			<h5 id="today"><span>{{today|date:"Y-m-d H:i"}} 기준 </span> <br>
-			<span id="today_amount">{{today_amount}} / {{object.goal}} (ml)</span></h5>
+			<span id="today_amount">{{today_amount}} / {{object.goal}} (ml)</span> <span id="percent"></span></h5>
 			<br><br>
 		</div>
 		<div>
@@ -129,7 +129,6 @@
 				data:{"user":user, "amount":amount},
 				dataType: "json",
 				success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
-					console.log(response)	
 					$("#today_amount").html( response.result.today_amount + "ml")
 					$("#amount").val("")
 					$("#history").html(response.render_history)
@@ -158,7 +157,6 @@
             data:{"user":user, "amount":amount},
 			dataType: "json",
 			success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
-				console.log(response)	
 				$("#today_amount").html( response.result.today_amount + "ml")
 					$("#amount").val("")
 					$("#history").html(response.render_history)
@@ -169,6 +167,8 @@
 			}
         })
 	}
+
+	$("#percent").html(" - "+parseInt(({{today_amount}} / {{object.goal}} ) * 100)+"%")
 </script>
 
 {% endblock %}

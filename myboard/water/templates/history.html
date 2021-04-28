@@ -1,8 +1,8 @@
 <h4>일일 섭취 기록</h4>
+
 {% for each in water %}
 <p>
-<span>{{each.time|date:"Y-m-d H:i"}} - {{each.amount}} ml</span> <input id="{{each.id}}" name="btn_remove" type="button" class="btn btn-outline-danger btn-sm ml-3" value="x">
+	<span>{{each.time|date:"Y-m-d H:i"}} - {{each.amount}} ml</span> 
+	<input id="{{each.id}}" name="btn_remove" type="button" class="btn btn-outline-danger btn-sm ml-3" value="x">
 </p>
 {% endfor %}
-
-

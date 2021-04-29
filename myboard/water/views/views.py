@@ -26,13 +26,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 class WaterView(TemplateView):
     template_name = 'templates.html'
-
+    # request
     def get_context_data(self, **kwargs):
         kwargs.setdefault('view', self)
         if self.extra_context is not None:
             kwargs.update(self.extra_context)
 
-        user = Profile.objects.last()
+        user = self.request.user.profile
 
         day_7 = datetime.datetime.now()-datetime.timedelta(days=7)
         water_today = Water.objects.filter(user=user, time__gte=datetime.datetime.today().date()).order_by('-time')

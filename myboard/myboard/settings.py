@@ -38,12 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'taggit.apps.TaggitAppConfig',
+    'taggit_templatetags2',
+    'widget_tweaks',
     'bookmark',
     'blog',
     'photo',
     'water',
-    'taggit.apps.TaggitAppConfig',
-    'taggit_templatetags2',
+
 ]
 
 MIDDLEWARE = [
@@ -143,3 +146,6 @@ TAGGIT_LIMIT = 50
 
 DISQUS_SHORTNAME = 'Python Web Programm-cm'
 DISQUS_MY_DOMAIN = 'http://127.0.0.1:8001/'
+
+#LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'

@@ -2,6 +2,7 @@
 {% block title %}post_all.html{% endblock %}
 {% block content %}
 {% csrf_token %}
+{% load humanize %}
 
 <style>
 [class*="col-sm"] {
@@ -17,10 +18,10 @@
 <div class="row">
 	<div class="col-mod-8 m-3 mr-5">
 		<div>
-			<h3>{{object.user.username}}님의 수분 섭취</h3>
+			<h3>{{user}}님의 수분 섭취</h3>
 			
 			<h5 id="today"><span>{{today|date:"Y-m-d H:i"}} 기준 </span> <br>
-			<span id="today_amount">{{today_amount}} / {{object.goal}} (ml)</span> <span id="percent"></span></h5>
+			<span id="today_amount">{{today_amount|intcomma}} / {{object.goal|intcomma}} (ml)</span> <span id="percent"></span></h5>
 			<br><br>
 		</div>
 		<div>
@@ -107,7 +108,8 @@
 			data:{"id":id},
 			dataType: "json",
 			success: function(response){
-				$("#today_amount").html( response.result.today_amount + "ml")
+				$("#today_amount").html( response.result.today_amount.toLocaleString('ko-KR') + "ml / "+ 
+					response.result.object["goal"].toLocaleString('ko-KR') + " (ml)")
 				$("#amount").val("")
 				$("#chart_div").html(response.render_chart_today)
 				$(event.target).parent().remove()
@@ -121,15 +123,16 @@
 
 	$(function(){
 		$("input[name=add_water]").dblclick(function(){
-			user = {{object.user.id}}
+			user = {{user.id}}
 			amount = $("#amount").val()
 			$.ajax({
 				url:"{% url 'water:water_append' %}",
 				type:'POST',
 				data:{"user":user, "amount":amount},
 				dataType: "json",
-				success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
-					$("#today_amount").html( response.result.today_amount + "ml")
+				success: function(response){
+					$("#today_amount").html( response.result.today_amount.toLocaleString('ko-KR') + "ml / "+ 
+					response.result.object["goal"].toLocaleString('ko-KR') + " (ml)")
 					$("#amount").val("")
 					$("#history").html(response.render_history)
 					$("#chart_div").html(response.render_chart_today)
@@ -149,15 +152,16 @@
 		if($("#amount").val()==""){
 			alert("값을 넣어주세요.")
 		}
-		user = {{object.user.id}}
+		user = {{user.id}}
 		amount = $("#amount").val()
 		$.ajax({
             url:"{% url 'water:water_append' %}",
             type:'POST',
             data:{"user":user, "amount":amount},
 			dataType: "json",
-			success: function(response){ // 통신 성공시 - 동적으로 좋아요 갯수 변경, 유저 목록 변경
-				$("#today_amount").html( response.result.today_amount + "ml")
+			success: function(response){
+					$("#today_amount").html( response.result.today_amount.toLocaleString('ko-KR') + "ml / "+ 
+					response.result.object["goal"].toLocaleString('ko-KR') + " (ml)")
 					$("#amount").val("")
 					$("#history").html(response.render_history)
 					$("#chart_div").html(response.render_chart_today)

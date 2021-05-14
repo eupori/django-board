@@ -19,11 +19,12 @@
 
 	
 	today_list_json = JSON.parse('{% autoescape off %}{{week_list}}{% endautoescape %}')
-
+	console.log(today_list_json)
 	data.addRows(today_list_json);
 
 	// Set chart options
-	var options = {'title':'주간 수분 섭취량',
+	var title_str = '주간 수분 섭취량  (평균 ' + {{week_avg}} + ')';
+	var options = {'title':title_str,
 					'width':1200,
 					'height':300};
 

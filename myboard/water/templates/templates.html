@@ -35,6 +35,8 @@
 		</div>
 	</div>	
 	<div id="history" class="col-mod-4 col-sm-4 m-3 ml-5" style="overflow:auto; width:500px; height:450px;">
+	<input class="datepicker"  readonly>
+	<input id="get_history" name="get_history" type="button" class="btn btn-outline-btn-outline-light" onclick="get_history();" value="GET">
 		<div>
 			{% include "history.html" %}
 		</div>
@@ -62,6 +64,17 @@
 
 {% block extra-script %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link
+	rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+/>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+	$(function () {
+	$("#datepicker").datepicker({ dateFormat: "yy-mm-dd" });
+	});
+</script>
 
 <script>
 	// using jQuery
@@ -111,7 +124,9 @@
 				$("#today_amount").html( response.result.today_amount.toLocaleString('ko-KR') + "ml / "+ 
 					response.result.object["goal"].toLocaleString('ko-KR') + " (ml)")
 				$("#amount").val("")
+				$("#percent").html(" - "+parseInt((parseInt(response.result.today_amount) / parseInt(response.result.object["goal"]) ) * 100)+"%")
 				$("#chart_div").html(response.render_chart_today)
+				$("#chart_div_week").html(response.render_chart_week)
 				$(event.target).parent().remove()
 			}
 		})
@@ -136,13 +151,19 @@
 					$("#amount").val("")
 					$("#history").html(response.render_history)
 					$("#chart_div").html(response.render_chart_today)
-					
+					$("#chart_div_week").html(response.render_chart_week)
+					$("#percent").html(" - "+parseInt((parseInt(response.result.today_amount) / parseInt(response.result.object["goal"]) ) * 100)+"%")
 					$("input[name=btn_remove]").off("click");
 					$("input[name=btn_remove]").on("click", target_remove)
 				}
 			})
 		})
 	})
+
+	function get_history(){
+		var date = $("#get_history").val()
+		
+	}
 	
     function asd(amount){
 		$("#amount").val(amount)
@@ -165,7 +186,8 @@
 					$("#amount").val("")
 					$("#history").html(response.render_history)
 					$("#chart_div").html(response.render_chart_today)
-					
+					$("#chart_div_week").html(response.render_chart_week)
+					$("#percent").html(" - "+parseInt((parseInt(response.result.today_amount) / parseInt(response.result.object["goal"]) ) * 100)+"%")
 					$("input[name=btn_remove]").off("click");
 					$("input[name=btn_remove]").on("click", target_remove)
 			}
@@ -173,6 +195,16 @@
 	}
 
 	$("#percent").html(" - "+parseInt(({{today_amount}} / {{object.goal}} ) * 100)+"%")
+
+	$(function() {
+		$( ".datepicker" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "1900:2012",
+		// You can put more options here.
+
+		});
+	});
 </script>
 
 {% endblock %}
